@@ -1,0 +1,8 @@
+const myURL=new URL('https://www.example.com:8080/products?category=electronics&sort=price#reviews')
+myURL.searchParams.append("q","node")
+myURL.searchParams.set("category","tablet")
+myURL.searchParams.delete("sort")
+myURL.searchParams.sort()
+console.log(myURL)
+console.log(myURL.searchParams.get('q'))
+console.log(myURL.searchParams.has('sort'))

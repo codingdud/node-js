@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "toolSets": [
+    {
+      "id": "mongodb-dev-minimal",
+      "label": "MongoDB Dev Minimal",
+      "description": "Focused edits and local script operations",
+      "tools": [
+        "read_file",
+        "file_search",
+        "grep_search",
+        "apply_patch"
+      ]
+    },
+    {
+      "id": "mongodb-ops-safe",
+      "label": "MongoDB Ops Safe",
+      "description": "Operational mode with preflight and explicit safety checks",
+      "tools": [
+        "read_file",
+        "file_search",
+        "grep_search",
+        "apply_patch",
+        "run_in_terminal"
+      ],
+      "requiredHook": ".copilot/hooks/HARD-STOP.md"
+    },
+    {
+      "id": "research-docs",
+      "label": "Research and Docs",
+      "description": "Context gathering and documentation updates",
+      "tools": [
+        "read_file",
+        "file_search",
+        "grep_search",
+        "fetch_webpage",
+        "apply_patch"
+      ]
+    }
+  ]
+}

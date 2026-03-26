@@ -1,0 +1,197 @@
+services:
+  config1:
+    image: mongo:latest
+    container_name: config1
+    command: ["mongod", "--configsvr", "--replSet", "rs-config", "--port", "27019", "--bind_ip_all", "--dbpath", "/data/configdb"]
+    ports:
+      - "27019:27019"
+    volumes:
+      - config1_data:/data/configdb
+    networks:
+      - mongo-shard
+    restart: unless-stopped
+
+  config2:
+    image: mongo:latest
+    container_name: config2
+    command: ["mongod", "--configsvr", "--replSet", "rs-config", "--port", "27019", "--bind_ip_all", "--dbpath", "/data/configdb"]
+    ports:
+      - "27020:27019"
+    volumes:
+      - config2_data:/data/configdb
+    networks:
+      - mongo-shard
+    restart: unless-stopped
+
+  config3:
+    image: mongo:latest
+    container_name: config3
+    command: ["mongod", "--configsvr", "--replSet", "rs-config", "--port", "27019", "--bind_ip_all", "--dbpath", "/data/configdb"]
+    ports:
+      - "27021:27019"
+    volumes:
+      - config3_data:/data/configdb
+    networks:
+      - mongo-shard
+    restart: unless-stopped
+
+  shard1_1:
+    image: mongo:latest
+    container_name: shard1_1
+    command: ["mongod", "--shardsvr", "--replSet", "rs-shard1", "--port", "27018", "--bind_ip_all", "--dbpath", "/data/db"]
+    ports:
+      - "27030:27018"
+    volumes:
+      - shard1_1_data:/data/db
+    networks:
+      - mongo-shard
+    restart: unless-stopped
+
+  shard1_2:
+    image: mongo:latest
+    container_name: shard1_2
+    command: ["mongod", "--shardsvr", "--replSet", "rs-shard1", "--port", "27018", "--bind_ip_all", "--dbpath", "/data/db"]
+    ports:
+      - "27031:27018"
+    volumes:
+      - shard1_2_data:/data/db
+    networks:
+      - mongo-shard
+    restart: unless-stopped
+
+  shard1_3:
+    image: mongo:latest
+    container_name: shard1_3
+    command: ["mongod", "--shardsvr", "--replSet", "rs-shard1", "--port", "27018", "--bind_ip_all", "--dbpath", "/data/db"]
+    ports:
+      - "27032:27018"
+    volumes:
+      - shard1_3_data:/data/db
+    networks:
+      - mongo-shard
+    restart: unless-stopped
+
+  shard2_1:
+    image: mongo:latest
+    container_name: shard2_1
+    command: ["mongod", "--shardsvr", "--replSet", "rs-shard2", "--port", "27021", "--bind_ip_all", "--dbpath", "/data/db"]
+    ports:
+      - "27033:27021"
+    volumes:
+      - shard2_1_data:/data/db
+    networks:
+      - mongo-shard
+    restart: unless-stopped
+
+  shard2_2:
+    image: mongo:latest
+    container_name: shard2_2
+    command: ["mongod", "--shardsvr", "--replSet", "rs-shard2", "--port", "27021", "--bind_ip_all", "--dbpath", "/data/db"]
+    ports:
+      - "27034:27021"
+    volumes:
+      - shard2_2_data:/data/db
+    networks:
+      - mongo-shard
+    restart: unless-stopped
+
+  shard2_3:
+    image: mongo:latest
+    container_name: shard2_3
+    command: ["mongod", "--shardsvr", "--replSet", "rs-shard2", "--port", "27021", "--bind_ip_all", "--dbpath", "/data/db"]
+    ports:
+      - "27035:27021"
+    volumes:
+      - shard2_3_data:/data/db
+    networks:
+      - mongo-shard
+    restart: unless-stopped
+
+  shard3_1:
+    image: mongo:latest
+    container_name: shard3_1
+    command: ["mongod", "--shardsvr", "--replSet", "rs-shard3", "--port", "27023", "--bind_ip_all", "--dbpath", "/data/db"]
+    ports:
+      - "27036:27023"
+    volumes:
+      - shard3_1_data:/data/db
+    networks:
+      - mongo-shard
+    restart: unless-stopped
+
+  shard3_2:
+    image: mongo:latest
+    container_name: shard3_2
+    command: ["mongod", "--shardsvr", "--replSet", "rs-shard3", "--port", "27023", "--bind_ip_all", "--dbpath", "/data/db"]
+    ports:
+      - "27037:27023"
+    volumes:
+      - shard3_2_data:/data/db
+    networks:
+      - mongo-shard
+    restart: unless-stopped
+
+  shard3_3:
+    image: mongo:latest
+    container_name: shard3_3
+    command: ["mongod", "--shardsvr", "--replSet", "rs-shard3", "--port", "27023", "--bind_ip_all", "--dbpath", "/data/db"]
+    ports:
+      - "27038:27023"
+    volumes:
+      - shard3_3_data:/data/db
+    networks:
+      - mongo-shard
+    restart: unless-stopped
+
+  mongos:
+    image: mongo:latest
+    container_name: mongos
+    command: ["mongos", "--configdb", "rs-config/config1:27019,config2:27019,config3:27019", "--bind_ip_all", "--port", "27017"]
+    ports:
+      - "27017:27017"
+    networks:
+      - mongo-shard
+    restart: unless-stopped
+
+  init-cluster:
+    image: mongo:latest
+    container_name: init-cluster
+    depends_on:
+      - config1
+      - config2
+      - config3
+      - shard1_1
+      - shard1_2
+      - shard1_3
+      - shard2_1
+      - shard2_2
+      - shard2_3
+      - shard3_1
+      - shard3_2
+      - shard3_3
+      - mongos
+    entrypoint: ["bash", "-lc", "sleep 12; mongosh --nodb --quiet /scripts/init-cluster.js"]
+    volumes:
+      - ./init-cluster.js:/scripts/init-cluster.js:ro
+    networks:
+      - mongo-shard
+    restart: "no"
+
+volumes:
+  config1_data:
+  config2_data:
+  config3_data:
+  shard1_1_data:
+  shard1_2_data:
+  shard1_3_data:
+  shard2_1_data:
+  shard2_2_data:
+  shard2_3_data:
+  shard3_1_data:
+  shard3_2_data:
+  shard3_3_data:
+
+networks:
+  mongo-shard:
+    external: true
+    name: mongo-shard
