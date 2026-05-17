@@ -9,6 +9,7 @@ console.log(data.toString())
 const empty=Buffer.alloc(10);
 console.log(empty.length)
 for(let [i,k] of empty.entries()) {
+  //console.log(i,k)
   empty[i]=65+i
 }
 console.log(empty)

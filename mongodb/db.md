@@ -7,7 +7,7 @@
 
 data storage in nosql isa diffrent then taditional use row,col and strick schema
 - doument eg: mongodb similar to json couchbase
-- key-value redish ,dynomoDB
+- key-value redish,firestore ,dynomoDB
 - colum - Cassandra hbase
 - graph - neo4g, grapgql
 
