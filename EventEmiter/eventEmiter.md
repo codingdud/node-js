@@ -2,10 +2,9 @@
 
 ## What are Events?
 
-Think of events like **notifications** in real life. When your phone rings, that's an "event" - something happened, and you respond to it by answering. In Node.js, events work the same way:
-
-- Something happens (an "event" is **emitted**)
-- Code responds to it (a "listener" is **called**)
+event have two part
+produce - emit event
+consume - conumes the0 event do task
 
 ---
 
